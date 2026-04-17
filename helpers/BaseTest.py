@@ -1,5 +1,7 @@
 #emcapsule éléments de sélénium
 
+import os
+import json
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -8,13 +10,15 @@ from webdriver_manager.chrome import ChromeDriverManager
 
 class BaseTest:
 
-    # def __init__(self):
-    #     self.driver = None
-
     def setup_method(self):
         options = Options()
-        options.add_argument("start-maximized")
-        chromedriver_path = 'D:\\chromedriver\\chromedriver.exe'
+        if os.environ.get("CI"):
+            options.add_argument("--headless=new")
+            options.add_argument("--no-sandbox")
+            options.add_argument("--disable-dev-shm-usage")
+        else:
+            print("Running in non-CI environment, launching browser with GUI.")
+            options.add_argument("start-maximized")
         self.driver = webdriver.Chrome(
             service=Service(ChromeDriverManager().install()),
             options=options
@@ -27,3 +31,8 @@ class BaseTest:
 
     def open_application(self):
         self.driver.get("https://ecommerce-playground.lambdatest.io/index.php")
+
+    def get_user_data(self, user_key="guest_user_1"):
+        data_path = os.path.join(os.path.dirname(__file__), "..", "data", "users.json")
+        with open(data_path, "r") as f:
+            return json.load(f)[user_key]
