@@ -6,7 +6,7 @@ class ProductListPage():
 
     def __init__(self, driver: WebDriver):
          self.driver = driver
-         self.lbl_Availabilityfilter = '//label[contains(text(),"In stock")][@for="mz-fss-0--1"]/..'
+         self.lbl_Availabilityfilter = '(//*[contains(text(), "In stock")])[2]/..'
          self.img_ProductItem = '(//div[@class="carousel-item active"]/img[@class="lazy-load"])[3]'
 
 
